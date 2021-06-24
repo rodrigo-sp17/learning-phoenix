@@ -21,21 +21,24 @@ defmodule HelloWeb.Router do
     get "/hello", HelloController, :index
     get "/hello/:messenger", HelloController, :show
     resources "/users", UserController
-    resources "/sessions", SessionController, only: [:new, :create, :delete],
-    singleton: true
-    resources "/reviews", ReviewController
+    resources "/sessions", SessionController, only: [:new, :create, :delete], singleton: true
+
+  end
+
+  scope "/cms", HelloWeb.CMS, as: :cms do
+    pipe_through [:browser, :authenticate_user]
+
+    resources "/pages", PageController
   end
 
   scope "/admin", HelloWeb.Admin, as: :admin do
     pipe_through :browser
 
-    resources "/reviews", ReviewController
   end
 
   scope "/api", HelloWeb.Api, as: :api do
     pipe_through :api
 
-    resources "/reviews", ReviewController
   end
 
 
